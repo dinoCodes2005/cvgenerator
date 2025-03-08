@@ -1,0 +1,165 @@
+{% load static tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    {% tailwind_css %}
+  </head>
+  <body class="flex justify-center bg-slate-300 sm:py-10 relative">
+    <!-- prettier-ignore  -->
+    {% if messages %}
+    {% for message in messages %}
+    <div
+      class="bg-green-50 border-b border-green-400 text-green-800 text-sm p-4 flex justify-between absolute top-0 w-full z-30 alert"
+    >
+      <div>
+        <div class="flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <p>
+            <span class="font-bold">Info:</span>
+            {{message}}
+          </p>
+        </div>
+      </div>
+      <div
+        onclick="this.closest('.alert').style.display ='none'"
+        class="cursor-pointer"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </div>
+    </div>
+    {% endfor %} {% endif %}
+
+    <div
+      class="w-[800px] min-h-[100vh] relative bg-white rounded-lg flex flex-col justify-center items-center pb-5 gap-5 px-10"
+    >
+      <h2 class="font-semibold text-4xl mt-10" style="font-family: Poppins">
+        Your Profiles
+      </h2>
+      <div class="w-full min-h-[70%] flex flex-col gap-5">
+        <!-- prettier-ignore  -->
+        {% if profiles%}{% for profile in profiles%}
+
+        <div class="w-full relative parent">
+          <div class="relative group">
+            <div
+              class="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-300 group-hover:duration-200"
+            ></div>
+            <div
+              class="relative px-3 py-3 sm:px-7 sm:py-6 bg-white ring-1 ring-gray-900/5 rounded-lg leading-none flex justify-between space-x-6"
+            >
+              <div class="flex items-center">
+                <a href="{% url 'edit' profile.id %}">
+                  <i
+                    class="bx bxs-edit mr-5 text-3xl text-purple-600 cursor-pointer hover:bg-slate-200 transition-all duration-300 p-1 rounded-lg"
+                  ></i
+                ></a>
+
+                <h2 class="slate-800">{{profile}}</h2>
+              </div>
+              <div class="flex justify-center items-center">
+                <i
+                  onclick="pop(this)"
+                  class="bx bxs-trash text-rose-600 text-xl sm:text-3xl mr-2 hover:bg-slate-200 cursor-pointer transition-all duration-300 p-1 rounded-lg"
+                ></i>
+                <a href="{% url 'generate' profile.id %}"
+                  ><button
+                    type="submit"
+                    class="p-2 text-xs sm:p-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 transition duration-300 ease-in-out text-white rounded-lg"
+                  >
+                    Generate
+                  </button></a
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            class="absolute w-[300px] right-0 bg-slate-300/60 z-30 p-4 flex justify-between backdrop-blur-md rounded-lg confirm scale-0 transition-all duration-200 origin-top"
+          >
+            <h1 style="font-family: Poppins">Are you sure ?</h1>
+            <div class="flex gap-5">
+              <a href="{% url 'delete' profile.id %}">
+                <button
+                  class="bg-rose-600 text-white p-3 rounded-md hover:bg-rose-500"
+                >
+                  Yes
+                </button></a
+              >
+
+              <button
+                onclick="closePop(this)"
+                class="bg-green-600 text-white p-3 rounded-md hover:bg-green-500"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {% endfor %} {% endif %}
+      </div>
+      <a href="{% url 'home'%}"
+        ><button
+          type="submit"
+          class="p-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 transition duration-300 ease-in-out text-white rounded-lg"
+        >
+          Create Profiles
+        </button></a
+      >
+    </div>
+    <script>
+      function pop(tag) {
+        var confirm = tag.closest(".parent").querySelector(".confirm");
+        if (confirm.classList.contains("scale-0")) {
+          confirm.classList.remove("scale-0");
+          confirm.classList.add("scale-100");
+        } else {
+          confirm.classList.remove("scale-100");
+          confirm.classList.add("scale-0");
+        }
+      }
+
+      function closePop(tag) {
+        var confirm = tag.closest(".parent").querySelector(".confirm");
+        console.log("chingchong");
+        confirm.classList.remove("scale-100");
+        confirm.classList.add("scale-0");
+      }
+    </script>
+  </body>
+</html>
